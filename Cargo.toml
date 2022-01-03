@@ -2,7 +2,11 @@
 name = "octopower"
 version = "0.1.0"
 edition = "2021"
-description = "A client library for the Octopus Energy API"
+description = "A client library for the Octopus Energy API."
+authors = ["Andrew Walbran <qwandor@gmail.com>"]
+repository = "https://github.com/qwandor/octopower"
+keywords = ["octopus", "energy", "api", "smart-meter"]
+categories = ["api-bindings"]
 
 [dependencies]
 chrono = { version = "0.4.19", features = ["serde"] }
