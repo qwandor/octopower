@@ -1,4 +1,4 @@
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, FixedOffset, Utc};
 use graphql_client::{reqwest::post_graphql, GraphQLQuery, Response};
 use reqwest::{Client, StatusCode, Url};
 use serde::Deserialize;
@@ -51,6 +51,84 @@ pub async fn authenticate(email: &str, password: &str) -> Result<AuthToken, ApiE
     query_path = "graphql/authenticate.graphql"
 )]
 struct AuthenticateQuery;
+
+pub async fn account(auth_token: &AuthToken, account_id: &str) -> Result<Account, ApiError> {
+    let client = Client::new();
+    let url = format!("https://api.octopus.energy/v1/accounts/{}/", account_id);
+    let response = client
+        .get(url)
+        .header("Authorization", &auth_token.0)
+        .send()
+        .await?;
+
+    let status = response.status();
+    if status.is_success() {
+        Ok(response.json().await?)
+    } else {
+        let body = response.text().await?;
+        Err(ApiError::RestError { status, body })
+    }
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub struct Account {
+    pub number: String,
+    pub properties: Vec<Property>,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub struct Property {
+    pub id: u32,
+    pub moved_in_at: DateTime<FixedOffset>,
+    pub moved_out_at: Option<DateTime<FixedOffset>>,
+    pub address_line_1: String,
+    pub address_line_2: String,
+    pub address_line_3: String,
+    pub town: String,
+    pub county: String,
+    pub postcode: String,
+    pub electricity_meter_points: Vec<ElectricityMeterPoint>,
+    pub gas_meter_points: Vec<GasMeterPoint>,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub struct ElectricityMeterPoint {
+    pub mpan: String,
+    pub profile_class: u32,
+    pub consumption_standard: u32,
+    pub meters: Vec<Meter>,
+    pub agreements: Vec<Agreement>,
+    pub is_export: bool,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub struct GasMeterPoint {
+    pub mprn: String,
+    pub consumption_standard: u32,
+    pub meters: Vec<Meter>,
+    pub agreements: Vec<Agreement>,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub struct Meter {
+    pub serial_number: String,
+    #[serde(default)]
+    pub registers: Vec<Register>,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub struct Register {
+    pub identifier: String,
+    pub rate: String,
+    pub is_settlement_register: bool,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub struct Agreement {
+    tariff_code: String,
+    valid_from: DateTime<FixedOffset>,
+    valid_to: DateTime<FixedOffset>,
+}
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum MeterType {
