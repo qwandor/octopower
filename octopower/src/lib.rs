@@ -3,7 +3,7 @@
 // See LICENSE-APACHE and LICENSE-MIT for details.
 
 use chrono::{DateTime, FixedOffset, Utc};
-use graphql_client::{reqwest::post_graphql, GraphQLQuery, Response};
+use graphql_client::{GraphQLQuery, Response};
 use reqwest::{Client, StatusCode, Url};
 use serde::Deserialize;
 use std::fmt::{self, Display, Formatter};
@@ -32,12 +32,13 @@ pub async fn authenticate(email: &str, password: &str) -> Result<AuthToken, ApiE
         email: email.to_owned(),
         password: password.to_owned(),
     };
-    let response: Response<authenticate_query::ResponseData> =
-        post_graphql::<AuthenticateQuery, &str>(
-            &client,
-            "https://api.octopus.energy/v1/graphql/",
-            variables,
-        )
+    let query = AuthenticateQuery::build_query(variables);
+    let response: Response<authenticate_query::ResponseData> = client
+        .post("https://api.octopus.energy/v1/graphql/")
+        .json(&query)
+        .send()
+        .await?
+        .json()
         .await?;
     if let Some(authenticate_query::ResponseData {
         obtain_kraken_token: Some(token),
