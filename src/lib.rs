@@ -68,13 +68,17 @@ pub async fn consumption(
     meter_type: MeterType,
     mpxn: &str,
     serial: &str,
+    page: u32,
+    page_size: usize,
 ) -> Result<Readings, ApiError> {
     let client = Client::new();
     let url = format!(
-        "https://api.octopus.energy/v1/{}/{}/meters/{}/consumption/",
+        "https://api.octopus.energy/v1/{}/{}/meters/{}/consumption/?page={}&page_size={}",
         meter_type.path_component(),
         mpxn,
-        serial
+        serial,
+        page,
+        page_size,
     );
     let response = client
         .get(url)

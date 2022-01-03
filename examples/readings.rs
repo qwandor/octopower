@@ -29,7 +29,7 @@ async fn main() -> Result<(), Report> {
 
     println!("Auth token: {:?}", token);
 
-    let consumption = consumption(&token, meter_type, mpxn, serial).await?;
+    let consumption = consumption(&token, meter_type, mpxn, serial, 1, 200).await?;
     println!(
         "{:?} consumption: {}/{} records",
         meter_type,
@@ -42,6 +42,7 @@ async fn main() -> Result<(), Report> {
             reading.interval_start, reading.interval_end, reading.consumption
         );
     }
+    println!("Previous: {:?}", consumption.previous);
     println!("Next: {:?}", consumption.next);
 
     Ok(())
