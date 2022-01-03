@@ -3,6 +3,8 @@
 The repository includes a number of related crates:
 
 - [octopower](./octopower), a client library for a subset of the Octopus Energy API.
+- [octo-influx](./octo-influx), a tool to import smart metering data from the Octopus Energy API
+  into InfluxDB.
 
 This is not an officially supported Google product.
 
