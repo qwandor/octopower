@@ -6,6 +6,7 @@ use std::fs::read_to_string;
 const DEFAULT_DATABASE: &str = "octopower";
 const DEFAULT_MEASUREMENT: &str = "octopower";
 const DEFAULT_INFLUXDB_URL: &str = "http://localhost:8086";
+const DEFAULT_NUM_READINGS: usize = 1000;
 const CONFIG_FILENAME: &str = "octo-influx.toml";
 
 #[derive(Clone, Debug, Deserialize)]
@@ -14,6 +15,12 @@ pub struct Config {
     #[serde(default)]
     pub influxdb: InfluxDbConfig,
     pub octopus: OctopusConfig,
+    #[serde(default = "default_num_readings")]
+    pub num_readings: usize,
+}
+
+fn default_num_readings() -> usize {
+    DEFAULT_NUM_READINGS
 }
 
 impl Config {

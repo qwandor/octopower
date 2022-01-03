@@ -31,6 +31,7 @@ async fn main() -> Result<(), Report> {
                     &meter.serial_number,
                     &influxdb_client,
                     &config.influxdb.measurement,
+                    config.num_readings,
                 )
                 .await?;
             }
@@ -46,6 +47,7 @@ async fn main() -> Result<(), Report> {
                     &meter.serial_number,
                     &influxdb_client,
                     &config.influxdb.measurement,
+                    config.num_readings,
                 )
                 .await?;
             }
@@ -62,8 +64,9 @@ async fn import_readings(
     serial: &str,
     influxdb_client: &Client,
     measurement: &str,
+    num_readings: usize,
 ) -> Result<(), Report> {
-    let consumption = consumption(&token, meter_type, mpxn, serial, 1, 1000, None).await?;
+    let consumption = consumption(&token, meter_type, mpxn, serial, 1, num_readings, None).await?;
     info!(
         "{:?} consumption: {}/{} records",
         meter_type,
