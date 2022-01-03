@@ -29,7 +29,7 @@ async fn main() -> Result<(), Report> {
 
     println!("Auth token: {:?}", token);
 
-    let consumption = consumption(&token, meter_type, mpxn, serial, 1, 200).await?;
+    let consumption = consumption(&token, meter_type, mpxn, serial, 1, 100, None).await?;
     println!(
         "{:?} consumption: {}/{} records",
         meter_type,
