@@ -1,5 +1,5 @@
-use eyre::{bail, Report};
-use octopower::{authenticate, consumption, MeterType};
+use eyre::Report;
+use octopower::{account, authenticate, consumption, AuthToken, MeterType};
 use std::process::exit;
 
 #[tokio::main]
@@ -7,29 +7,59 @@ async fn main() -> Result<(), Report> {
     pretty_env_logger::init();
 
     let args: Vec<_> = std::env::args().collect();
-    if args.len() != 6 {
+    if args.len() != 4 {
         eprintln!("Usage:");
-        eprintln!(
-            "  {} <email address> <password> (electricity|gas) <MPxN> <meter serial>",
-            args[0]
-        );
+        eprintln!("  {} <email address> <password> <account id>", args[0]);
         exit(1);
     }
     let email_address = &args[1];
     let password = &args[2];
-    let meter_type = match args[3].as_ref() {
-        "electricity" => MeterType::Electricity,
-        "gas" => MeterType::Gas,
-        t => bail!("Invalid meter type {}", t),
-    };
-    let mpxn = &args[4];
-    let serial = &args[5];
+    let account_id = &args[3];
 
     let token = authenticate(email_address, password).await?;
 
-    println!("Auth token: {:?}", token);
+    let account = account(&token, account_id).await?;
 
-    let consumption = consumption(&token, meter_type, mpxn, serial, 1, 100, None).await?;
+    for property in &account.properties {
+        println!("Property {}", property.address_line_1);
+        for electricity_meter_point in &property.electricity_meter_points {
+            println!("Electricity MPAN {}", electricity_meter_point.mpan);
+            for meter in &electricity_meter_point.meters {
+                println!("Meter serial {}", meter.serial_number);
+                show_consumption(
+                    &token,
+                    MeterType::Electricity,
+                    &electricity_meter_point.mpan,
+                    &meter.serial_number,
+                )
+                .await?;
+            }
+        }
+        for gas_meter_point in &property.gas_meter_points {
+            println!("Gas MPRN {}", gas_meter_point.mprn);
+            for meter in &gas_meter_point.meters {
+                println!("Meter serial {}", meter.serial_number);
+                show_consumption(
+                    &token,
+                    MeterType::Gas,
+                    &gas_meter_point.mprn,
+                    &meter.serial_number,
+                )
+                .await?;
+            }
+        }
+    }
+
+    Ok(())
+}
+
+async fn show_consumption(
+    token: &AuthToken,
+    meter_type: MeterType,
+    mpxn: &str,
+    serial: &str,
+) -> Result<(), Report> {
+    let consumption = consumption(&token, meter_type, mpxn, serial, 1, 10, None).await?;
     println!(
         "{:?} consumption: {}/{} records",
         meter_type,
