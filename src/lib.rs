@@ -48,15 +48,33 @@ pub async fn authenticate(email: &str, password: &str) -> Result<AuthToken, ApiE
 )]
 struct AuthenticateQuery;
 
-pub async fn electricity_consumption(
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum MeterType {
+    Electricity,
+    Gas,
+}
+
+impl MeterType {
+    fn path_component(self) -> &'static str {
+        match self {
+            Self::Electricity => "electricity-meter-points",
+            Self::Gas => "gas-meter-points",
+        }
+    }
+}
+
+pub async fn consumption(
     auth_token: &AuthToken,
-    mpan: &str,
+    meter_type: MeterType,
+    mpxn: &str,
     serial: &str,
 ) -> Result<Readings, ApiError> {
     let client = Client::new();
     let url = format!(
-        "https://api.octopus.energy/v1/electricity-meter-points/{}/meters/{}/consumption/",
-        mpan, serial
+        "https://api.octopus.energy/v1/{}/{}/meters/{}/consumption/",
+        meter_type.path_component(),
+        mpxn,
+        serial
     );
     let response = client
         .get(url)

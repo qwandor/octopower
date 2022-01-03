@@ -1,5 +1,5 @@
 use eyre::Report;
-use octopower::{authenticate, electricity_consumption};
+use octopower::{authenticate, consumption, MeterType};
 
 #[tokio::main]
 async fn main() -> Result<(), Report> {
@@ -9,7 +9,7 @@ async fn main() -> Result<(), Report> {
 
     println!("Auth token: {:?}", token);
 
-    let consumption = electricity_consumption(&token, "MPAN", "serial").await?;
+    let consumption = consumption(&token, MeterType::Electricity, "MPAN", "serial").await?;
     println!(
         "Electricity consumption: {}/{} records",
         consumption.results.len(),
