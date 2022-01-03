@@ -1,21 +1,10 @@
-# octopower
+# About this project
 
-[![crates.io page](https://img.shields.io/crates/v/octopower.svg)](https://crates.io/crates/octopower)
-[![docs.rs page](https://docs.rs/octopower/badge.svg)](https://docs.rs/octopower)
+The repository includes a number of related crates:
 
-A client library for a subset of the Octopus Energy API. This also works for Octopus resellers such
-as London Power.
+- [octopower](./octopower), a client library for a subset of the Octopus Energy API.
 
 This is not an officially supported Google product.
-
-## Usage
-
-To try the included example, you'll need your email address, password and account ID. Your account
-ID should be something like "A-1234ABCD".
-
-```
-$ cargo run --example readings email@address.domain mypassword A-1234ABCD
-```
 
 ## License
 
