@@ -5,6 +5,7 @@ edition = "2021"
 description = "A client library for the Octopus Energy API"
 
 [dependencies]
+chrono = { version = "0.4.19", features = ["serde"] }
 graphql_client = { version = "0.10.0", features = ["reqwest"] }
 reqwest = { version = "0.11.8", features = ["json", "rustls-tls-webpki-roots"] }
 serde = "1.0.133"

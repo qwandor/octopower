@@ -1,5 +1,7 @@
+use chrono::{DateTime, Utc};
 use graphql_client::{reqwest::post_graphql, GraphQLQuery, Response};
-use reqwest::Client;
+use reqwest::{Client, StatusCode};
+use serde::Deserialize;
 use thiserror::Error;
 
 /// A JWT token used for authenticated API requests.
@@ -12,6 +14,8 @@ pub enum ApiError {
     HttpError(#[from] reqwest::Error),
     #[error("GraphQL errors: {0:?}")]
     GraphQlErrors(Option<Vec<graphql_client::Error>>),
+    #[error("REST error {status}: {body}")]
+    RestError { status: StatusCode, body: String },
 }
 
 pub async fn authenticate(email: &str, password: &str) -> Result<AuthToken, ApiError> {
@@ -43,3 +47,69 @@ pub async fn authenticate(email: &str, password: &str) -> Result<AuthToken, ApiE
     query_path = "graphql/authenticate.graphql"
 )]
 struct AuthenticateQuery;
+
+pub async fn electricity_consumption(
+    auth_token: &AuthToken,
+    mpan: &str,
+    serial: &str,
+) -> Result<Readings, ApiError> {
+    let client = Client::new();
+    let url = format!(
+        "https://api.octopus.energy/v1/electricity-meter-points/{}/meters/{}/consumption/",
+        mpan, serial
+    );
+    let response = client
+        .get(url)
+        .header("Authorization", &auth_token.0)
+        .send()
+        .await?;
+
+    let status = response.status();
+    if status.is_success() {
+        Ok(response.json().await?)
+    } else {
+        let body = response.text().await?;
+        Err(ApiError::RestError { status, body })
+    }
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub struct Readings {
+    pub count: usize,
+    pub next: Option<String>,
+    pub previous: Option<String>,
+    pub results: Vec<Consumption>,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub struct Consumption {
+    pub consumption: f32,
+    pub interval_start: DateTime<Utc>,
+    pub interval_end: DateTime<Utc>,
+}
+
+#[cfg(test)]
+mod tests {
+    use chrono::TimeZone;
+
+    use super::*;
+
+    #[test]
+    fn deserialize_consumption() {
+        assert_eq!(
+            serde_json::from_str::<Consumption>(
+                r#"{
+                    "consumption": 0.42,
+                    "interval_start": "2021-12-31T22:00:00Z",
+                    "interval_end": "2021-12-31T22:30:00Z"
+                }"#
+            )
+            .unwrap(),
+            Consumption {
+                consumption: 0.42,
+                interval_start: Utc.ymd(2021, 12, 31).and_hms(22, 0, 0),
+                interval_end: Utc.ymd(2021, 12, 31).and_hms(22, 30, 0)
+            }
+        );
+    }
+}
