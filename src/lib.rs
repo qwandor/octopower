@@ -1,3 +1,7 @@
+// Copyright 2022 the octopower authors.
+// This project is dual-licensed under Apache 2.0 and MIT terms.
+// See LICENSE-APACHE and LICENSE-MIT for details.
+
 use chrono::{DateTime, FixedOffset, Utc};
 use graphql_client::{reqwest::post_graphql, GraphQLQuery, Response};
 use reqwest::{Client, StatusCode, Url};
