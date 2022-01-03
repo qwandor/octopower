@@ -2,6 +2,12 @@
 name = "octo-influx"
 version = "0.1.0"
 edition = "2021"
+description = "A tool to import smart metering data from the Octopus Energy API into InfluxDB."
+license = "MIT OR Apache-2.0"
+authors = ["Andrew Walbran <qwandor@gmail.com>"]
+repository = "https://github.com/qwandor/octopower"
+keywords = ["octopus", "energy", "influxdb", "smart-meter"]
+categories = ["network-programming"]
 
 [dependencies]
 eyre = "0.6.5"
