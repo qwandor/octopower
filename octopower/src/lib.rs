@@ -149,6 +149,15 @@ impl MeterType {
     }
 }
 
+impl Display for MeterType {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        f.write_str(match self {
+            Self::Electricity => "electricity",
+            Self::Gas => "gas",
+        })
+    }
+}
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Grouping {
     Hour,
