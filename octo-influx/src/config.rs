@@ -1,3 +1,7 @@
+// Copyright 2022 the octopower authors.
+// This project is dual-licensed under Apache 2.0 and MIT terms.
+// See LICENSE-APACHE and LICENSE-MIT for details.
+
 use eyre::{Report, WrapErr};
 use influx_db_client::{reqwest::Url, Client};
 use serde::Deserialize;
