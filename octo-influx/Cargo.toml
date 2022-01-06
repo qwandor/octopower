@@ -19,3 +19,18 @@ serde = "1.0.133"
 tokio = { version = "1.15.0", features = ["macros", "rt", "rt-multi-thread"] }
 toml = "0.5.8"
 url = { version = "2.2.2", features = ["serde"] }
+
+[package.metadata.deb]
+# $auto doesn't work because we don't build packages in the same container as we build the binaries.
+depends = "libc6, libssl1.1, libgcc1"
+section = "net"
+maintainer-scripts = "debian-scripts"
+conf-files = ["/etc/octo-influx.toml"]
+assets = [
+	["target/release/octo-influx", "usr/bin/", "755"],
+	["octo-influx.example.toml", "etc/octo-influx.toml", "640"],
+	["README.md", "usr/share/doc/octo-influx/", "644"],
+]
+
+# This section needs to be here even if it's empty, for the systemd integration to work.
+[package.metadata.deb.systemd-units]

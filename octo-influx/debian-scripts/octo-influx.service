@@ -1,0 +1,15 @@
+[Unit]
+Description=Tool to import smart metering data from the Octopus Energy API into InfluxDB
+After=network.target
+Wants=octo-influx.timer
+
+[Service]
+Type=simple
+WorkingDirectory=/etc/
+Environment=RUST_BACKTRACE=1
+Environment=RUST_LIB_BACKTRACE=1
+Environment=RUST_LOG=info
+ExecStart=/usr/bin/octo-influx
+
+[Install]
+WantedBy=multi-user.target
