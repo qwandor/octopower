@@ -2,10 +2,11 @@
 // This project is dual-licensed under Apache 2.0 and MIT terms.
 // See LICENSE-APACHE and LICENSE-MIT for details.
 
-use chrono::{DateTime, FixedOffset, Utc};
+pub mod results;
+
 use graphql_client::{GraphQLQuery, Response};
 use reqwest::{Client, StatusCode, Url};
-use serde::Deserialize;
+use results::{account::Account, consumption::Readings};
 use std::fmt::{self, Display, Formatter};
 use thiserror::Error;
 use url::ParseError;
@@ -67,7 +68,7 @@ pub async fn authenticate(email: &str, password: &str) -> Result<AuthToken, ApiE
 struct AuthenticateQuery;
 
 /// Fetch information about the given account from the Octopus REST API.
-pub async fn account(auth_token: &AuthToken, account_id: &str) -> Result<Account, ApiError> {
+pub async fn get_account(auth_token: &AuthToken, account_id: &str) -> Result<Account, ApiError> {
     let client = Client::new();
     let url = format!("https://api.octopus.energy/v1/accounts/{}/", account_id);
     let response = client
@@ -83,77 +84,6 @@ pub async fn account(auth_token: &AuthToken, account_id: &str) -> Result<Account
         let body = response.text().await?;
         Err(ApiError::RestError { status, body })
     }
-}
-
-/// Information about an Octopus account.
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Account {
-    /// The account number. This is usually of the form `"A-1234ABCD"`.
-    pub number: String,
-    /// The properties associated with this account.
-    pub properties: Vec<Property>,
-}
-
-/// Information about a particular property within an Octopus account.
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Property {
-    pub id: u32,
-    pub moved_in_at: DateTime<FixedOffset>,
-    pub moved_out_at: Option<DateTime<FixedOffset>>,
-    pub address_line_1: String,
-    pub address_line_2: String,
-    pub address_line_3: String,
-    pub town: String,
-    pub county: String,
-    pub postcode: String,
-    pub electricity_meter_points: Vec<ElectricityMeterPoint>,
-    pub gas_meter_points: Vec<GasMeterPoint>,
-}
-
-/// Information about a particular electricity meter point at a property. This may include several
-/// different meters.
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct ElectricityMeterPoint {
-    pub mpan: String,
-    pub profile_class: u32,
-    pub consumption_standard: u32,
-    /// The electricity meters included in this meter point.
-    pub meters: Vec<Meter>,
-    pub agreements: Vec<Agreement>,
-    pub is_export: bool,
-}
-
-/// Information about a particular gas meter point at a property. This may include several different
-/// meters.
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct GasMeterPoint {
-    pub mprn: String,
-    pub consumption_standard: u32,
-    /// The gas meters included in this meter point.
-    pub meters: Vec<Meter>,
-    pub agreements: Vec<Agreement>,
-}
-
-/// Information about a single electricity or gas meter at a property.
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Meter {
-    pub serial_number: String,
-    #[serde(default)]
-    pub registers: Vec<Register>,
-}
-
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Register {
-    pub identifier: String,
-    pub rate: String,
-    pub is_settlement_register: bool,
-}
-
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Agreement {
-    tariff_code: String,
-    valid_from: DateTime<FixedOffset>,
-    valid_to: DateTime<FixedOffset>,
 }
 
 /// The type of meter, either electricity or gas.
@@ -220,7 +150,7 @@ impl Display for Grouping {
 ///
 /// Because there may be a large number of records, they can be fetched in multiple pages. Page 0
 /// has the most recent `page_size` records, subsequent pages have older records.
-pub async fn consumption(
+pub async fn get_consumption(
     auth_token: &AuthToken,
     meter_type: MeterType,
     mpxn: &str,
@@ -254,53 +184,5 @@ pub async fn consumption(
     } else {
         let body = response.text().await?;
         Err(ApiError::RestError { status, body })
-    }
-}
-
-/// A list of electricity or gas meter readings.
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Readings {
-    /// The total number of readings available.
-    pub count: usize,
-    pub next: Option<String>,
-    pub previous: Option<String>,
-    /// The list of consumption readings in this page. This may have fewer than `count` readings.
-    pub results: Vec<Consumption>,
-}
-
-/// A single consumption record from an electricity or gas meter. This may be either for a single
-/// half hour or a longer grouping.
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Consumption {
-    /// The amount of energy consumed in this time period. For electrity meters and SMETS1 gas
-    /// meters this in in kWh; for SMETS2 gas meters it is m^3.
-    pub consumption: f32,
-    pub interval_start: DateTime<Utc>,
-    pub interval_end: DateTime<Utc>,
-}
-
-#[cfg(test)]
-mod tests {
-    use chrono::TimeZone;
-
-    use super::*;
-
-    #[test]
-    fn deserialize_consumption() {
-        assert_eq!(
-            serde_json::from_str::<Consumption>(
-                r#"{
-                    "consumption": 0.42,
-                    "interval_start": "2021-12-31T22:00:00Z",
-                    "interval_end": "2021-12-31T22:30:00Z"
-                }"#
-            )
-            .unwrap(),
-            Consumption {
-                consumption: 0.42,
-                interval_start: Utc.ymd(2021, 12, 31).and_hms(22, 0, 0),
-                interval_end: Utc.ymd(2021, 12, 31).and_hms(22, 30, 0)
-            }
-        );
     }
 }

@@ -8,7 +8,10 @@ use config::{get_influxdb_client, Config};
 use eyre::Report;
 use influx_db_client::{Client, Point, Precision};
 use log::info;
-use octopower::{account, authenticate, consumption, AuthToken, Consumption, MeterType};
+use octopower::{
+    authenticate, get_account, get_consumption, results::consumption::Consumption, AuthToken,
+    MeterType,
+};
 
 const INFLUXDB_PRECISION: Option<Precision> = Some(Precision::Seconds);
 
@@ -20,7 +23,7 @@ async fn main() -> Result<(), Report> {
     let influxdb_client = get_influxdb_client(&config.influxdb)?;
 
     let token = authenticate(&config.octopus.email_address, &config.octopus.password).await?;
-    let account = account(&token, &config.octopus.account_id).await?;
+    let account = get_account(&token, &config.octopus.account_id).await?;
 
     for property in &account.properties {
         info!("Property {}", property.address_line_1);
@@ -70,7 +73,8 @@ async fn import_readings(
     measurement: &str,
     num_readings: usize,
 ) -> Result<(), Report> {
-    let consumption = consumption(&token, meter_type, mpxn, serial, 0, num_readings, None).await?;
+    let consumption =
+        get_consumption(&token, meter_type, mpxn, serial, 0, num_readings, None).await?;
     info!(
         "{:?} consumption: {}/{} records",
         meter_type,

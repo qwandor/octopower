@@ -3,7 +3,7 @@
 // See LICENSE-APACHE and LICENSE-MIT for details.
 
 use eyre::Report;
-use octopower::{account, authenticate, consumption, AuthToken, MeterType};
+use octopower::{authenticate, get_account, get_consumption, AuthToken, MeterType};
 use std::process::exit;
 
 #[tokio::main]
@@ -22,7 +22,7 @@ async fn main() -> Result<(), Report> {
 
     let token = authenticate(email_address, password).await?;
 
-    let account = account(&token, account_id).await?;
+    let account = get_account(&token, account_id).await?;
 
     for property in &account.properties {
         println!("Property {}", property.address_line_1);
@@ -63,7 +63,7 @@ async fn show_consumption(
     mpxn: &str,
     serial: &str,
 ) -> Result<(), Report> {
-    let consumption = consumption(&token, meter_type, mpxn, serial, 1, 10, None).await?;
+    let consumption = get_consumption(&token, meter_type, mpxn, serial, 1, 10, None).await?;
     println!(
         "{:?} consumption: {}/{} records",
         meter_type,
