@@ -11,21 +11,30 @@ use thiserror::Error;
 use url::ParseError;
 
 /// A JWT token used for authenticated API requests.
+///
+/// This can be obtained by calling [`authenticate`].
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct AuthToken(String);
 
+/// An error communicating with the Octopus API.
 #[derive(Debug, Error)]
 pub enum ApiError {
+    /// There was an error making the HTTP request.
     #[error("HTTP request error: {0}")]
     HttpError(#[from] reqwest::Error),
+    /// A GraphQL query returned an error.
     #[error("GraphQL errors: {0:?}")]
     GraphQlErrors(Option<Vec<graphql_client::Error>>),
+    /// A REST API method returned an error status.
     #[error("REST error {status}: {body}")]
     RestError { status: StatusCode, body: String },
+    /// There was an error parsing a URL from a string.
     #[error("Error parsing URL: {0}")]
     UrlParseError(#[from] ParseError),
 }
 
+/// Authenticate to the Octopus API using the given email address and password, returning an
+/// authentication token which can be used for subsequent authenticated requests.
 pub async fn authenticate(email: &str, password: &str) -> Result<AuthToken, ApiError> {
     let client = Client::new();
     let variables = authenticate_query::Variables {
@@ -57,6 +66,7 @@ pub async fn authenticate(email: &str, password: &str) -> Result<AuthToken, ApiE
 )]
 struct AuthenticateQuery;
 
+/// Fetch information about the given account from the Octopus REST API.
 pub async fn account(auth_token: &AuthToken, account_id: &str) -> Result<Account, ApiError> {
     let client = Client::new();
     let url = format!("https://api.octopus.energy/v1/accounts/{}/", account_id);
@@ -75,12 +85,16 @@ pub async fn account(auth_token: &AuthToken, account_id: &str) -> Result<Account
     }
 }
 
+/// Information about an Octopus account.
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Account {
+    /// The account number. This is usually of the form `"A-1234ABCD"`.
     pub number: String,
+    /// The properties associated with this account.
     pub properties: Vec<Property>,
 }
 
+/// Information about a particular property within an Octopus account.
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Property {
     pub id: u32,
@@ -96,24 +110,31 @@ pub struct Property {
     pub gas_meter_points: Vec<GasMeterPoint>,
 }
 
+/// Information about a particular electricity meter point at a property. This may include several
+/// different meters.
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct ElectricityMeterPoint {
     pub mpan: String,
     pub profile_class: u32,
     pub consumption_standard: u32,
+    /// The electricity meters included in this meter point.
     pub meters: Vec<Meter>,
     pub agreements: Vec<Agreement>,
     pub is_export: bool,
 }
 
+/// Information about a particular gas meter point at a property. This may include several different
+/// meters.
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct GasMeterPoint {
     pub mprn: String,
     pub consumption_standard: u32,
+    /// The gas meters included in this meter point.
     pub meters: Vec<Meter>,
     pub agreements: Vec<Agreement>,
 }
 
+/// Information about a single electricity or gas meter at a property.
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Meter {
     pub serial_number: String,
@@ -135,6 +156,7 @@ pub struct Agreement {
     valid_to: DateTime<FixedOffset>,
 }
 
+/// The type of meter, either electricity or gas.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum MeterType {
     Electricity,
@@ -159,6 +181,7 @@ impl Display for MeterType {
     }
 }
 
+/// The level of aggregation with which to group electricity or gas consumption records.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Grouping {
     Hour,
@@ -186,6 +209,17 @@ impl Display for Grouping {
     }
 }
 
+/// Fetch electricity or gas consumption records from the meter with the given `mpxn` (MPAN or MPRN)
+/// and serial.
+///
+/// Electricity meters have an MPAN (Meter Point Administration Number), also known as an
+/// Electricity Supply Number, while gas meters have an MPRN (Meter Point Reference Number), also
+/// known as a Gas Supply Number.
+///
+/// If `grouping` is `None` then raw half-hourly records will be returned.
+///
+/// Because there may be a large number of records, they can be fetched in multiple pages. Page 0
+/// has the most recent `page_size` records, subsequent pages have older records.
 pub async fn consumption(
     auth_token: &AuthToken,
     meter_type: MeterType,
@@ -223,16 +257,23 @@ pub async fn consumption(
     }
 }
 
+/// A list of electricity or gas meter readings.
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Readings {
+    /// The total number of readings available.
     pub count: usize,
     pub next: Option<String>,
     pub previous: Option<String>,
+    /// The list of consumption readings in this page. This may have fewer than `count` readings.
     pub results: Vec<Consumption>,
 }
 
+/// A single consumption record from an electricity or gas meter. This may be either for a single
+/// half hour or a longer grouping.
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Consumption {
+    /// The amount of energy consumed in this time period. For electrity meters and SMETS1 gas
+    /// meters this in in kWh; for SMETS2 gas meters it is m^3.
     pub consumption: f32,
     pub interval_start: DateTime<Utc>,
     pub interval_end: DateTime<Utc>,
