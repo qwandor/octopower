@@ -3,7 +3,7 @@ Description=Run octo-influx every night.
 Requires=octo-influx.service
 
 [Timer]
-OnCalendar=*-*-* 2:00
+OnCalendar=*-*-* 8:00
 RandomizedDelaySec=30m
 Persistent=true
 
