@@ -1,6 +1,7 @@
 # About this project
 
-The repository includes a number of related crates:
+The repository includes a number of related crates using the
+[Octopus Energy API](https://developer.octopus.energy/docs/api/):
 
 - [octopower](./octopower), a client library for a subset of the Octopus Energy API.
 - [octo-influx](./octo-influx), a tool to import smart metering data from the Octopus Energy API
