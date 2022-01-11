@@ -1,5 +1,5 @@
 # The number of half-hourly meter readings to import.
-num_readings = 1000
+num_readings=1000
 
 [octopus]
 # The email address of your Octopus Energy account.
