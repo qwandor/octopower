@@ -4,7 +4,9 @@
 
 //! A client library for the [Octopus Energy API](https://developer.octopus.energy/docs/api/).
 //!
-//! # Example
+//! # Usage
+//!
+//! To login and fetch account information:
 //!
 //! ```rust
 //! use octopower::{authenticate, get_account};
