@@ -2,6 +2,20 @@
 // This project is dual-licensed under Apache 2.0 and MIT terms.
 // See LICENSE-APACHE and LICENSE-MIT for details.
 
+//! A client library for the [Octopus Energy API](https://developer.octopus.energy/docs/api/).
+//!
+//! # Example
+//!
+//! ```rust
+//! use octopower::{authenticate, get_account};
+//!
+//! # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+//! let token = authenticate("email@address.example", "password").await?;
+//! let account = get_account(&token, "A-1234ABCD").await?;
+//! println!("Account information: {:?}", account);
+//! # Ok(()) }
+//! ```
+
 pub mod results;
 
 use graphql_client::{GraphQLQuery, Response};
