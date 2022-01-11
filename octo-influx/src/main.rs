@@ -70,7 +70,7 @@ async fn import_readings(
     measurement: &str,
     num_readings: usize,
 ) -> Result<(), Report> {
-    let consumption = consumption(&token, meter_type, mpxn, serial, 1, num_readings, None).await?;
+    let consumption = consumption(&token, meter_type, mpxn, serial, 0, num_readings, None).await?;
     info!(
         "{:?} consumption: {}/{} records",
         meter_type,

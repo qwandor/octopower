@@ -201,7 +201,7 @@ pub async fn consumption(
         meter_type.path_component(),
         mpxn,
         serial,
-        page,
+        page + 1,
         page_size,
     ))?;
     if let Some(grouping) = grouping {
