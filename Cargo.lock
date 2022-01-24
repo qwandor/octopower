@@ -301,8 +301,7 @@ checksum = "78cc372d058dcf6d5ecd98510e7fbc9e5aec4d21de70f65fea8fecebcd881bd4"
 [[package]]
 name = "graphql-introspection-query"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7f2a4732cf5140bd6c082434494f785a19cfb566ab07d1382c3671f5812fed6d"
+source = "git+https://github.com/qwandor/graphql-client?branch=rustls#281350232e2c1308493c9881fddd61e4ab14b362"
 dependencies = [
  "serde",
 ]
@@ -320,10 +319,10 @@ dependencies = [
 [[package]]
 name = "graphql_client"
 version = "0.10.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a9b58571cfc3cc42c3e8ff44fc6cfbb6c0dea17ed22d20f9d8f1efc4e8209a3f"
+source = "git+https://github.com/qwandor/graphql-client?branch=rustls#281350232e2c1308493c9881fddd61e4ab14b362"
 dependencies = [
  "graphql_query_derive",
+ "reqwest",
  "serde",
  "serde_json",
 ]
@@ -331,8 +330,7 @@ dependencies = [
 [[package]]
 name = "graphql_client_codegen"
 version = "0.10.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b4bf9cd823359d74ad3d3ecf1afd4a975f4ff2f891cdf9a66744606daf52de8c"
+source = "git+https://github.com/qwandor/graphql-client?branch=rustls#281350232e2c1308493c9881fddd61e4ab14b362"
 dependencies = [
  "graphql-introspection-query",
  "graphql-parser",
@@ -348,8 +346,7 @@ dependencies = [
 [[package]]
 name = "graphql_query_derive"
 version = "0.10.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e56b093bfda71de1da99758b036f4cc811fd2511c8a76f75680e9ffbd2bb4251"
+source = "git+https://github.com/qwandor/graphql-client?branch=rustls#281350232e2c1308493c9881fddd61e4ab14b362"
 dependencies = [
  "graphql_client_codegen",
  "proc-macro2",
@@ -383,12 +380,9 @@ checksum = "ab5ef0d4909ef3724cc8cce6ccc8572c5c817592e9285f5464f8e86f8bd3726e"
 
 [[package]]
 name = "heck"
-version = "0.3.3"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6d621efb26863f0e9924c6ac577e8275e5e6b77455db64ffa6c65c904e9e132c"
-dependencies = [
- "unicode-segmentation",
-]
+checksum = "2540771e65fc8cb83cd6e8a237f70c319bd5c29f78ed1084ba5d50eeac86f7f9"
 
 [[package]]
 name = "hermit-abi"
@@ -1115,12 +1109,6 @@ checksum = "d54590932941a9e9266f0832deed84ebe1bf2e4c9e4a3554d393d18f5e854bf9"
 dependencies = [
  "tinyvec",
 ]
-
-[[package]]
-name = "unicode-segmentation"
-version = "1.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8895849a949e7845e06bd6dc1aa51731a103c42707010a5b591c0038fb73385b"
 
 [[package]]
 name = "unicode-xid"
