@@ -13,7 +13,7 @@ categories = ["api-bindings"]
 chrono = { version = "0.4.19", features = ["serde"] }
 graphql_client = { version = "0.10.0" }
 reqwest = { version = "0.11.8", features = ["json", "rustls-tls-webpki-roots"], default-features = false }
-serde = "1.0.133"
+serde = "1.0.137"
 serde_json = "1.0.74"
 thiserror = "1.0.30"
 url = "2.2.2"
