@@ -508,9 +508,9 @@ dependencies = [
 
 [[package]]
 name = "influx_db_client"
-version = "0.5.0"
+version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "49f1a5abf7f7759f14075abcc0140d79a339729e50042ddf93fc0de9d11ddb1f"
+checksum = "bf486e3d7196a71122b92de13a07739a6046a8cd5673c1a61ed02a67e5c0d6d5"
 dependencies = [
  "bytes",
  "futures",
