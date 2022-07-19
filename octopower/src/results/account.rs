@@ -75,5 +75,5 @@ pub struct Register {
 pub struct Agreement {
     tariff_code: String,
     valid_from: DateTime<FixedOffset>,
-    valid_to: DateTime<FixedOffset>,
+    valid_to: Option<DateTime<FixedOffset>>,
 }
