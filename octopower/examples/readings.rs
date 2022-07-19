@@ -36,7 +36,7 @@ async fn main() -> Result<(), Report> {
                     &electricity_meter_point.mpan,
                     &meter.serial_number,
                 )
-                .await?;
+                .await;
             }
         }
         for gas_meter_point in &property.gas_meter_points {
@@ -49,7 +49,7 @@ async fn main() -> Result<(), Report> {
                     &gas_meter_point.mprn,
                     &meter.serial_number,
                 )
-                .await?;
+                .await;
             }
         }
     }
@@ -57,27 +57,24 @@ async fn main() -> Result<(), Report> {
     Ok(())
 }
 
-async fn show_consumption(
-    token: &AuthToken,
-    meter_type: MeterType,
-    mpxn: &str,
-    serial: &str,
-) -> Result<(), Report> {
-    let consumption = get_consumption(&token, meter_type, mpxn, serial, 1, 10, None).await?;
-    println!(
-        "{:?} consumption: {}/{} records",
-        meter_type,
-        consumption.results.len(),
-        consumption.count
-    );
-    for reading in &consumption.results {
-        println!(
-            "{}-{}: {}",
-            reading.interval_start, reading.interval_end, reading.consumption
-        );
+async fn show_consumption(token: &AuthToken, meter_type: MeterType, mpxn: &str, serial: &str) {
+    match get_consumption(&token, meter_type, mpxn, serial, 1, 10, None).await {
+        Ok(consumption) => {
+            println!(
+                "{:?} consumption: {}/{} records",
+                meter_type,
+                consumption.results.len(),
+                consumption.count
+            );
+            for reading in &consumption.results {
+                println!(
+                    "{}-{}: {}",
+                    reading.interval_start, reading.interval_end, reading.consumption
+                );
+            }
+            println!("Previous: {:?}", consumption.previous);
+            println!("Next: {:?}", consumption.next);
+        }
+        Err(e) => println!("Error getting consumption page 1 for meter: {}", e),
     }
-    println!("Previous: {:?}", consumption.previous);
-    println!("Next: {:?}", consumption.next);
-
-    Ok(())
 }
