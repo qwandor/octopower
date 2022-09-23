@@ -15,7 +15,7 @@ influx_db_client = { version = "0.5.1", default-features = false, features = ["r
 log = "0.4.17"
 octopower = { version = "0.2.0", path = "../octopower" }
 pretty_env_logger = "0.4.0"
-serde = "1.0.144"
+serde = "1.0.145"
 tokio = { version = "1.21.1", features = ["macros", "rt", "rt-multi-thread"] }
 toml = "0.5.9"
 url = { version = "2.3.1", features = ["serde"] }
