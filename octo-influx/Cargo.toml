@@ -17,7 +17,7 @@ octopower = { version = "0.2.0", path = "../octopower" }
 pretty_env_logger = "0.5.0"
 serde = "1.0.164"
 tokio = { version = "1.28.2", features = ["macros", "rt", "rt-multi-thread"] }
-toml = "0.5.11"
+toml = "0.7.5"
 url = { version = "2.4.0", features = ["serde"] }
 
 [package.metadata.deb]
