@@ -14,7 +14,7 @@ chrono = { version = "0.4.26", features = ["serde"] }
 graphql_client = { version = "0.13.0" }
 reqwest = { version = "0.11.18", features = ["json", "rustls-tls-webpki-roots"], default-features = false }
 serde = "1.0.168"
-serde_json = "1.0.100"
+serde_json = "1.0.102"
 thiserror = "1.0.43"
 url = "2.4.0"
 
