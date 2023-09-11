@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Build
         run: cargo build --all-features
       - name: Run tests
@@ -29,7 +29,7 @@ jobs:
     env:
       RUSTC_BOOTSTRAP: 1
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install grcov
         run: curl -L https://github.com/mozilla/grcov/releases/download/v0.8.6/grcov-v0.8.6-x86_64-unknown-linux-gnu.tar.gz | tar zxf -
       - name: Install llvm-tools
