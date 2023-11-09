@@ -49,8 +49,8 @@ mod tests {
             .unwrap(),
             Consumption {
                 consumption: 0.42,
-                interval_start: Utc.ymd(2021, 12, 31).and_hms(22, 0, 0),
-                interval_end: Utc.ymd(2021, 12, 31).and_hms(22, 30, 0)
+                interval_start: Utc.with_ymd_and_hms(2021, 12, 31,22, 0, 0).single().unwrap(),
+                interval_end: Utc.with_ymd_and_hms(2021, 12, 31,22, 30, 0).single().unwrap()
             }
         );
     }
