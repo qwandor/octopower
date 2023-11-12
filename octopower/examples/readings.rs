@@ -58,7 +58,7 @@ async fn main() -> Result<(), Report> {
 }
 
 async fn show_consumption(token: &AuthToken, meter_type: MeterType, mpxn: &str, serial: &str) {
-    match get_consumption(&token, meter_type, mpxn, serial, 1, 10, None).await {
+    match get_consumption(&token, meter_type, mpxn, serial, 0, 10, None).await {
         Ok(consumption) => {
             println!(
                 "{:?} consumption: {}/{} records",
