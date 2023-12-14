@@ -1,8 +1,8 @@
 repo_name: qwandor/octopower
-report_id: 34572eb4461e3f6f5d6c5dbe83ab3dff
+report_id: 2e99700eeb4c36a9618700d8f7441d77
 repo_type: Public
-timestamp: '2023-12-14T09:23:56+00:00'
-requested_by: qwandor
+timestamp: '2023-12-14T12:01:31+00:00'
+requested_by: dependabot[bot]
 provider: github
 branch: main
 detected_tools_count: 10
