@@ -1,11 +1,11 @@
 repo_name: qwandor/octopower
-report_id: ce92d0cf3f145210f148fb9015556a48
+report_id: 34572eb4461e3f6f5d6c5dbe83ab3dff
 repo_type: Public
-timestamp: '2023-11-09T11:31:45+00:00'
-requested_by: dependabot[bot]
+timestamp: '2023-12-14T09:23:56+00:00'
+requested_by: qwandor
 provider: github
 branch: main
-detected_tools_count: 6
+detected_tools_count: 10
 tools:
 - name: JavaScript
   description: Lightweight, interpreted, object-oriented language with first-class
@@ -19,6 +19,18 @@ tools:
   detection_source: octopower/Cargo.toml
   last_updated_by: Andrew Walbran
   last_updated_on: 2022-01-03 18:00:29.000000000 Z
+- name: Ruby
+  description: A dynamic, interpreted, open source programming language with a focus
+    on simplicity and productivity
+  website_url: https://www.ruby-lang.org
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/989/ruby.png
+  detection_source: octopower/Cargo.toml
+  last_updated_by: Andrew Walbran
+  last_updated_on: 2022-01-03 18:00:29.000000000 Z
 - name: Rust
   description: A safe, concurrent, practical language
   website_url: http://www.rust-lang.org/
@@ -28,6 +40,30 @@ tools:
   sub_category: Languages
   image_url: https://img.stackshare.io/service/1070/v7txhrjp9pdqrkdtxxp0.png
   detection_source: Repo Metadata
+- name: Serde
+  description: Serialization framework for Rust
+  website_url: https://serde.rs
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Serialization Frameworks
+  image_url: https://img.stackshare.io/service/11028/no-img-open-source.png
+  detection_source: octopower/Cargo.toml
+  last_updated_by: dependabot[bot]
+  last_updated_on: 2023-11-21 09:48:25.000000000 Z
+- name: Tokio
+  description: Runtime for writing reliable asynchronous applications with Rust
+  website_url: https://tokio.rs/
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Concurrency Frameworks
+  image_url: https://img.stackshare.io/service/12187/bC40df3r_400x400.jpg
+  detection_source: octopower/Cargo.toml
+  last_updated_by: dependabot[bot]
+  last_updated_on: 2023-12-11 11:00:35.000000000 Z
 - name: GraphQL
   description: A data query language and runtime
   website_url: http://graphql.org/
@@ -56,9 +92,20 @@ tools:
   category: Build, Test, Deploy
   sub_category: Continuous Integration
   image_url: https://img.stackshare.io/service/11563/actions.png
-  detection_source: ".github/workflows/rust.yml"
+  detection_source: ".github/workflows/lint.yml"
   last_updated_by: dependabot[bot]
   last_updated_on: 2023-09-11 11:12:32.000000000 Z
+- name: RubyGems
+  description: Easily download, install, and use ruby software packages on your system
+  website_url: https://rubygems.org/
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Package Managers
+  image_url: https://img.stackshare.io/service/12795/5jL6-BA5_400x400.jpeg
+  detection_source: octopower/Cargo.toml
+  last_updated_by: Andrew Walbran
+  last_updated_on: 2022-01-03 18:00:29.000000000 Z
 - name: npm
   description: The package manager for JavaScript.
   website_url: https://www.npmjs.com/
