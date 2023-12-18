@@ -79,7 +79,7 @@ jobs:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/octo-influx-')
     steps:
       - name: Download packages
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: debian-packages
       - name: Parse tag for package and version
