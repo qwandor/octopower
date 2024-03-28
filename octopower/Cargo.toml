@@ -11,7 +11,7 @@ categories = ["api-bindings"]
 
 [dependencies]
 chrono = { version = "0.4.37", features = ["serde"] }
-graphql_client = { version = "0.13.0" }
+graphql_client = { version = "0.14.0" }
 reqwest = { version = "0.12.2", features = ["json", "rustls-tls-webpki-roots"], default-features = false }
 serde = "1.0.197"
 serde_json = "1.0.114"
