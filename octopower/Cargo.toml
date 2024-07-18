@@ -15,7 +15,7 @@ graphql_client = { version = "0.14.0" }
 reqwest = { version = "0.12.5", features = ["json", "rustls-tls-webpki-roots"], default-features = false }
 serde = "1.0.204"
 serde_json = "1.0.120"
-thiserror = "1.0.62"
+thiserror = "1.0.63"
 url = "2.5.2"
 
 [dev-dependencies]
