@@ -16,7 +16,7 @@ reqwest = { version = "0.12.9", features = ["json", "rustls-tls-webpki-roots"], 
 serde = "1.0.215"
 serde_json = "1.0.133"
 thiserror = "2.0.3"
-url = "2.5.3"
+url = "2.5.4"
 
 [dev-dependencies]
 eyre = "0.6.12"
