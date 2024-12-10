@@ -10,7 +10,7 @@ keywords = ["octopus", "energy", "api", "smart-meter"]
 categories = ["api-bindings"]
 
 [dependencies]
-chrono = { version = "0.4.38", features = ["serde"] }
+chrono = { version = "0.4.39", features = ["serde"] }
 graphql_client = { version = "0.14.0" }
 reqwest = { version = "0.12.9", features = ["json", "rustls-tls-webpki-roots"], default-features = false }
 serde = "1.0.215"
