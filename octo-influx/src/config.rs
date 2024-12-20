@@ -19,6 +19,7 @@ pub struct Config {
     #[serde(default)]
     pub influxdb: InfluxDbConfig,
     pub octopus: Option<OctopusConfig>,
+    pub enphase: Option<EnphaseConfig>,
     #[serde(default = "default_num_readings")]
     pub num_readings: usize,
 }
@@ -77,6 +78,13 @@ pub struct OctopusConfig {
     pub email_address: String,
     pub password: String,
     pub account_id: String,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct EnphaseConfig {
+    pub base_url: String,
+    pub token: String,
 }
 
 #[cfg(test)]
