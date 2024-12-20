@@ -18,7 +18,7 @@ const CONFIG_FILENAME: &str = "octo-influx.toml";
 pub struct Config {
     #[serde(default)]
     pub influxdb: InfluxDbConfig,
-    pub octopus: OctopusConfig,
+    pub octopus: Option<OctopusConfig>,
     #[serde(default = "default_num_readings")]
     pub num_readings: usize,
 }

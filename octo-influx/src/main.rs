@@ -22,41 +22,43 @@ async fn main() -> Result<(), Report> {
     let config = Config::from_file()?;
     let influxdb_client = get_influxdb_client(&config.influxdb)?;
 
-    let token = authenticate(&config.octopus.email_address, &config.octopus.password).await?;
-    let account = get_account(&token, &config.octopus.account_id).await?;
+    if let Some(octopus_config) = &config.octopus {
+        let token = authenticate(&octopus_config.email_address, &octopus_config.password).await?;
+        let account = get_account(&token, &octopus_config.account_id).await?;
 
-    for property in &account.properties {
-        info!("Property {}", property.address_line_1);
-        for electricity_meter_point in &property.electricity_meter_points {
-            info!("Electricity MPAN {}", electricity_meter_point.mpan);
-            for meter in &electricity_meter_point.meters {
-                info!("Meter serial {}", meter.serial_number);
-                import_readings(
-                    &token,
-                    MeterType::Electricity,
-                    &electricity_meter_point.mpan,
-                    &meter.serial_number,
-                    &influxdb_client,
-                    &config.influxdb.measurement,
-                    config.num_readings,
-                )
-                .await?;
+        for property in &account.properties {
+            info!("Property {}", property.address_line_1);
+            for electricity_meter_point in &property.electricity_meter_points {
+                info!("Electricity MPAN {}", electricity_meter_point.mpan);
+                for meter in &electricity_meter_point.meters {
+                    info!("Meter serial {}", meter.serial_number);
+                    import_readings(
+                        &token,
+                        MeterType::Electricity,
+                        &electricity_meter_point.mpan,
+                        &meter.serial_number,
+                        &influxdb_client,
+                        &config.influxdb.measurement,
+                        config.num_readings,
+                    )
+                    .await?;
+                }
             }
-        }
-        for gas_meter_point in &property.gas_meter_points {
-            info!("Gas MPRN {}", gas_meter_point.mprn);
-            for meter in &gas_meter_point.meters {
-                info!("Meter serial {}", meter.serial_number);
-                import_readings(
-                    &token,
-                    MeterType::Gas,
-                    &gas_meter_point.mprn,
-                    &meter.serial_number,
-                    &influxdb_client,
-                    &config.influxdb.measurement,
-                    config.num_readings,
-                )
-                .await?;
+            for gas_meter_point in &property.gas_meter_points {
+                info!("Gas MPRN {}", gas_meter_point.mprn);
+                for meter in &gas_meter_point.meters {
+                    info!("Meter serial {}", meter.serial_number);
+                    import_readings(
+                        &token,
+                        MeterType::Gas,
+                        &gas_meter_point.mprn,
+                        &meter.serial_number,
+                        &influxdb_client,
+                        &config.influxdb.measurement,
+                        config.num_readings,
+                    )
+                    .await?;
+                }
             }
         }
     }
