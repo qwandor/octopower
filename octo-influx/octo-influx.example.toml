@@ -1,22 +1,22 @@
 # The number of half-hourly meter readings to import.
-num_readings=1000
+num_readings = 1000
 
 [octopus]
 # The email address of your Octopus Energy account.
-email_address="email@address.host"
+email_address = "email@address.host"
 # The password of your Octopus Energy account.
-password="password"
+password = "password"
 # The account ID of your Octopus Energy account.
-account_id="A-1234ABCD"
+account_id = "A-1234ABCD"
 
 [influxdb]
 # The URL of the InfluxDB to which to connect.
-url="http://localhost:8086"
+url = "http://localhost:8086"
 # The username with which to authenticate to InfluxDB, if any.
-#username=""
+#username = ""
 # The password with which to authenticate to InfluxDB, if any.
-#password=""
+#password = ""
 # The name of the InfluxDB database to which to write data.
-database="octopower"
+database = "octopower"
 # The name of the measurement in the database to which to write data.
-measurement="octopower"
+measurement = "octopower"
