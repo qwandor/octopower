@@ -9,6 +9,12 @@ password = "password"
 # The account ID of your Octopus Energy account.
 account_id = "A-1234ABCD"
 
+[enphase]
+# The base URL of the local Enphase Envoy to which to connect.
+base_url = "https://envoy.local/"
+# The authentication token.
+token = "token"
+
 [influxdb]
 # The URL of the InfluxDB to which to connect.
 url = "http://localhost:8086"
