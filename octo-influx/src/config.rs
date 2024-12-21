@@ -83,7 +83,7 @@ pub struct OctopusConfig {
 #[derive(Clone, Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct EnphaseConfig {
-    pub base_url: String,
+    pub base_url: Url,
     pub token: String,
 }
 

@@ -10,7 +10,7 @@ keywords = ["octopus", "energy", "influxdb", "smart-meter"]
 categories = ["network-programming"]
 
 [dependencies]
-enphase = { version = "0.4.0", path = "../../rust-enphase" }
+enphase-local = { version = "0.1.0", path = "../enphase-local" }
 eyre = "0.6.12"
 influx_db_client = { version = "0.5.1", default-features = false, features = ["rustls-tls"] }
 log = "0.4.22"
