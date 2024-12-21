@@ -5,7 +5,7 @@
 mod config;
 
 use config::{get_influxdb_client, Config};
-use enphase::envoy;
+use enphase_local::Envoy;
 use eyre::Report;
 use influx_db_client::{Client, Point, Precision};
 use log::info;
@@ -24,16 +24,10 @@ async fn main() -> Result<(), Report> {
     let influxdb_client = get_influxdb_client(&config.influxdb)?;
 
     if let Some(enphase_config) = &config.enphase {
-        let enphase_local_client =
-            envoy::Client::new_with_token(&enphase_config.base_url, &enphase_config.token)?;
-        println!("Home: {:#?}", enphase_local_client.home().await?);
-        println!("Info: {:?}", enphase_local_client.info().await?);
-        println!("Inventory: {:#?}", enphase_local_client.inventory().await?);
-        println!("Inverters: {:#?}", enphase_local_client.inverters().await?);
-        println!(
-            "Production: {:#?}",
-            enphase_local_client.production().await?
-        );
+        let envoy = Envoy::new(enphase_config.base_url.to_owned(), &enphase_config.token);
+        println!("Home: {:#?}", envoy.home().await?);
+        println!("Inventory: {:#?}", envoy.inventory(false).await?);
+        println!("Production: {:#?}", envoy.production().await?);
     }
 
     if let Some(octopus_config) = &config.octopus {
