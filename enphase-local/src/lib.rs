@@ -6,10 +6,12 @@
 
 pub mod home;
 pub mod inventory;
+pub mod production;
 mod timestamp_string;
 
 use home::Home;
 use inventory::Inventory;
+use production::Production;
 use reqwest::{Client, Error, Url};
 
 /// Client for the Enphase Envoy local API.
@@ -50,6 +52,17 @@ impl Envoy {
         )));
         self.client
             .get(url)
+            .bearer_auth(&self.auth_token)
+            .send()
+            .await?
+            .error_for_status()?
+            .json()
+            .await
+    }
+
+    pub async fn production(&self) -> Result<Production, Error> {
+        self.client
+            .get(self.base_url.join("production.json?details=1").unwrap())
             .bearer_auth(&self.auth_token)
             .send()
             .await?
