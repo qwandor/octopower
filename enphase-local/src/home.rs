@@ -10,14 +10,22 @@ use std::net::IpAddr;
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Home {
+    /// When the software was built.
     #[serde(with = "ts_seconds")]
     pub software_build_epoch: DateTime<Utc>,
+    /// The local timezone configured for the gateway.
     pub timezone: String,
+    /// The current date according to the gateway.
     pub current_date: String,
+    /// The current time according to the gateway.
     pub current_time: NaiveTime,
+    /// Information about the network interfaces of the gatewway.
     pub network: Network,
+    /// The type of tariff configured.
     pub tariff: String,
-    pub comm: Comm,
+    /// Information about communications with devices.
+    pub comm: CommunicationSummary,
+    /// Information about wireless connections.
     pub wireless_connection: Vec<WirelessConnection>,
 }
 
@@ -55,21 +63,53 @@ pub enum InterfaceType {
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-pub struct Comm {
-    num: u8,
-    level: u8,
-    encharge: Vec<Encharge>,
+pub struct CommunicationSummary {
+    /// The number of devices communicating.
+    pub num: u8,
+    /// The signal level.
+    pub level: u8,
+    /// Information about Power Conditioning Units.
+    pub pcu: CommunicationStatus,
+    /// Information about AC Batteries.
+    pub acb: CommunicationStatus,
+    /// Information about Network System Relay Breakers.
+    pub nsrb: CommunicationStatus,
+    /// Information about Electrical Sub-panels.
+    pub esub: CommunicationStatus,
+    /// Information about IQ Batteries (aka. Encharge Storage).
+    pub encharge: Vec<EnchargeCommunicationStatus>,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-pub struct Encharge {}
+pub struct CommunicationStatus {
+    /// The number of devices communicating.
+    pub num: u8,
+    /// The signal level.
+    pub level: u8,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct EnchargeCommunicationStatus {
+    /// The number of devices communicating.
+    pub num: u8,
+    /// The signal level.
+    pub level: u8,
+    /// The 2.4 GHz signal level.
+    pub level_24g: u8,
+    /// The sub-GHz signal level.
+    pub level_subg: u8,
+}
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct WirelessConnection {
+    /// The current signal strength.
     pub signal_strength: u8,
+    /// The maximum signal strength recorded.
     pub signal_strength_max: u8,
+    /// The type of wireless connection.
     #[serde(rename = "type")]
     pub type_: WirelessConnectionType,
+    /// Whether the connection is connected.
     pub connected: bool,
 }
 
