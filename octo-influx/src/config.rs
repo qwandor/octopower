@@ -18,7 +18,8 @@ const CONFIG_FILENAME: &str = "octo-influx.toml";
 pub struct Config {
     #[serde(default)]
     pub influxdb: InfluxDbConfig,
-    pub octopus: OctopusConfig,
+    pub octopus: Option<OctopusConfig>,
+    pub enphase: Option<EnphaseConfig>,
     #[serde(default = "default_num_readings")]
     pub num_readings: usize,
 }
@@ -79,6 +80,13 @@ pub struct OctopusConfig {
     pub account_id: String,
 }
 
+#[derive(Clone, Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct EnphaseConfig {
+    pub base_url: Url,
+    pub token: String,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -92,6 +100,6 @@ mod tests {
     /// Parsing an empty config file should give an error.
     #[test]
     fn empty_config() {
-        assert!(toml::from_str::<Config>("").is_err());
+        toml::from_str::<Config>("").unwrap();
     }
 }
