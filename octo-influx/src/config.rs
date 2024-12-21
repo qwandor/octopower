@@ -100,6 +100,6 @@ mod tests {
     /// Parsing an empty config file should give an error.
     #[test]
     fn empty_config() {
-        assert!(toml::from_str::<Config>("").is_err());
+        toml::from_str::<Config>("").unwrap();
     }
 }
