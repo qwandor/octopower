@@ -22,6 +22,7 @@ async fn main() -> Result<(), Report> {
 
     let envoy = Envoy::new(Url::parse(base_url)?, auth_token);
     println!("Home: {:#?}", envoy.home().await?);
+    println!("Inventory: {:#?}", envoy.inventory(true).await?);
 
     Ok(())
 }
