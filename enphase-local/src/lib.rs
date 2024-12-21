@@ -4,9 +4,12 @@
 
 //! A client library for the Enphase Envoy local API.
 
-mod home;
+pub mod home;
+pub mod inventory;
+mod timestamp_string;
 
-pub use home::Home;
+use home::Home;
+use inventory::Inventory;
 use reqwest::{Client, Error, Url};
 
 /// Client for the Enphase Envoy local API.
@@ -32,6 +35,22 @@ impl Envoy {
     pub async fn home(&self) -> Result<Home, Error> {
         self.client
             .get(self.base_url.join("home.json").unwrap())
+            .send()
+            .await?
+            .error_for_status()?
+            .json()
+            .await
+    }
+
+    pub async fn inventory(&self, include_deleted: bool) -> Result<Inventory, Error> {
+        let mut url = self.base_url.join("inventory.json").unwrap();
+        url.set_query(Some(&format!(
+            "deleted={}",
+            if include_deleted { 1 } else { 0 }
+        )));
+        self.client
+            .get(url)
+            .bearer_auth(&self.auth_token)
             .send()
             .await?
             .error_for_status()?
