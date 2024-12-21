@@ -1,0 +1,25 @@
+[package]
+name = "enphase-local"
+version = "0.1.0"
+edition = "2021"
+description = "A client library for the Enphase Envoy local API."
+license = "MIT OR Apache-2.0"
+authors = ["Andrew Walbran <qwandor@gmail.com>"]
+repository = "https://github.com/qwandor/octopower"
+keywords = ["enphase", "energy", "api", "solar"]
+categories = ["api-bindings"]
+
+[dependencies]
+chrono = { version = "0.4.39", features = ["serde"] }
+reqwest = { version = "0.12.9", features = [
+    "json",
+    "rustls-tls-webpki-roots",
+], default-features = false }
+serde = { version = "1.0.216", features = ["derive"] }
+serde_json = "1.0.133"
+thiserror = "2.0.8"
+
+[dev-dependencies]
+eyre = "0.6.12"
+pretty_env_logger = "0.5.0"
+tokio = { version = "1.42.0", features = ["macros", "rt", "rt-multi-thread"] }

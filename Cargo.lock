@@ -193,6 +193,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "enphase-local"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "eyre",
+ "pretty_env_logger",
+ "reqwest 0.12.9",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.8",
+ "tokio",
+]
+
+[[package]]
 name = "env_logger"
 version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
