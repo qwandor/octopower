@@ -23,6 +23,7 @@ pub struct Envoy {
 }
 
 impl Envoy {
+    /// Constructs a new Enphase Envoy local API client with the given base URL and auth token.
     pub fn new(base_url: Url, auth_token: &str) -> Self {
         Self {
             base_url,
@@ -34,6 +35,7 @@ impl Envoy {
         }
     }
 
+    /// Returns a summary of the gateway status.
     pub async fn home(&self) -> Result<Home, Error> {
         self.client
             .get(self.base_url.join("home.json").unwrap())
@@ -44,6 +46,7 @@ impl Envoy {
             .await
     }
 
+    /// Returns an inventory of devices in the system.
     pub async fn inventory(&self, include_deleted: bool) -> Result<Inventory, Error> {
         let mut url = self.base_url.join("inventory.json").unwrap();
         url.set_query(Some(&format!(
@@ -60,6 +63,7 @@ impl Envoy {
             .await
     }
 
+    /// Returns statistics about current and past production and consumption.
     pub async fn production(&self) -> Result<Production, Error> {
         self.client
             .get(self.base_url.join("production.json?details=1").unwrap())
