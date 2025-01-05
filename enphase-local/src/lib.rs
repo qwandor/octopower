@@ -3,6 +3,21 @@
 // See LICENSE-APACHE and LICENSE-MIT for details.
 
 //! A client library for the Enphase Envoy local API.
+//!
+//! # Example
+//!
+//! ```
+//! use enphase_local::Envoy;
+//! use reqwest::Url;
+//!
+//! const AUTH_TOKEN: &str = "...";
+//!
+//! # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+//! let envoy = Envoy::new(Url::parse("https://envoy.local/")?, AUTH_TOKEN);
+//! let production = envoy.production().await?;
+//! println!("Production: {:?}", production);
+//! # Ok(()) }
+//! ```
 
 pub mod home;
 pub mod inventory;
