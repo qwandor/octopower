@@ -27,6 +27,8 @@ async fn main() -> Result<(), Report> {
     println!("Home: {:#?}", envoy.home().await?);
     println!("Inventory: {:#?}", envoy.inventory(true).await?);
     println!("Production: {:#?}", envoy.production().await?);
+    println!("IVP meter readings: {:#?}", envoy.meter_readings().await?);
+    println!("IVP meter reports: {:#?}", envoy.meter_reports().await?);
 
     loop {
         let production = envoy.production().await?;
