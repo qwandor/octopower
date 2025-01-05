@@ -21,11 +21,13 @@
 
 pub mod home;
 pub mod inventory;
+pub mod meters;
 pub mod production;
 mod timestamp_string;
 
 use home::Home;
 use inventory::Inventory;
+use meters::{Reading, Report};
 use production::Production;
 use reqwest::{Client, Error, Url};
 
@@ -82,6 +84,30 @@ impl Envoy {
     pub async fn production(&self) -> Result<Production, Error> {
         self.client
             .get(self.base_url.join("production.json?details=1").unwrap())
+            .bearer_auth(&self.auth_token)
+            .send()
+            .await?
+            .error_for_status()?
+            .json()
+            .await
+    }
+
+    /// Gets readings from all meters.
+    pub async fn meter_readings(&self) -> Result<Vec<Reading>, Error> {
+        self.client
+            .get(self.base_url.join("ivp/meters/readings").unwrap())
+            .bearer_auth(&self.auth_token)
+            .send()
+            .await?
+            .error_for_status()?
+            .json()
+            .await
+    }
+
+    /// Gets reports from all meters.
+    pub async fn meter_reports(&self) -> Result<Vec<Report>, Error> {
+        self.client
+            .get(self.base_url.join("ivp/meters/reports").unwrap())
             .bearer_auth(&self.auth_token)
             .send()
             .await?
