@@ -1,0 +1,40 @@
+[package]
+name = "enphase-influx"
+version = "0.1.0"
+edition = "2021"
+description = "A tool to import solar and battery data from the Enphase IQ Gateway local API into InfluxDB."
+license = "MIT OR Apache-2.0"
+authors = ["Andrew Walbran <qwandor@gmail.com>"]
+repository = "https://github.com/qwandor/octopower"
+keywords = ["enphase", "energy", "influxdb", "solar"]
+categories = ["network-programming"]
+
+[dependencies]
+eyre = "0.6.12"
+influx_db_client = { version = "0.5.1", default-features = false, features = [
+    "rustls-tls",
+] }
+log = "0.4.22"
+enphase-local = { version = "0.1.0", path = "../enphase-local" }
+pretty_env_logger = "0.5.0"
+serde = "1.0.217"
+tokio = { version = "1.42.0", features = ["macros", "rt", "rt-multi-thread"] }
+toml = "0.8.19"
+
+[dev-dependencies]
+chrono = "0.4.39"
+
+[package.metadata.deb]
+# $auto doesn't work because we don't build packages in the same container as we build the binaries.
+depends = "libc6, libssl1.1, libgcc1"
+section = "net"
+maintainer-scripts = "debian-scripts"
+conf-files = ["/etc/enphase-influx.toml"]
+assets = [
+	["target/release/enphase-influx", "usr/bin/", "755"],
+	["enphase-influx.example.toml", "etc/enphase-influx.toml", "640"],
+	["README.md", "usr/share/doc/enphase-influx/", "644"],
+]
+
+# This section needs to be here even if it's empty, for the systemd integration to work.
+[package.metadata.deb.systemd-units]

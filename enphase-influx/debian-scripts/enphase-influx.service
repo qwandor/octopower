@@ -1,0 +1,16 @@
+[Unit]
+Description=Tool to import solar production data from the Enphase Envoy local API into InfluxDB
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/etc/
+Environment=RUST_BACKTRACE=1
+Environment=RUST_LIB_BACKTRACE=1
+Environment=RUST_LOG=info
+ExecStart=/usr/bin/enphase-influx
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

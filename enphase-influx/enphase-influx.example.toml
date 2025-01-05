@@ -1,0 +1,18 @@
+# The number of seconds to wait between polling for new readings.
+poll_period_seconds = 600
+
+[influxdb]
+# The URL of the InfluxDB to which to connect.
+url = "http://localhost:8086"
+# The username with which to authenticate to InfluxDB, if any.
+#username = ""
+# The password with which to authenticate to InfluxDB, if any.
+#password = ""
+# The name of the InfluxDB database to which to write data.
+database = "enphase"
+
+[enphase]
+# The base URL of the local Enphase Envoy to which to connect.
+base_url = "https://envoy.local/"
+# The authentication token.
+token = "token"
