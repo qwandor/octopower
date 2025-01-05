@@ -1,11 +1,14 @@
 # About this project
 
 The repository includes a number of related crates using the
-[Octopus Energy API](https://developer.octopus.energy/docs/api/):
+[Octopus Energy API](https://developer.octopus.energy/docs/api/) and
+[Enphase API](https://github.com/Matthew1471/Enphase-API/tree/main/Documentation):
 
 - [octopower](./octopower), a client library for a subset of the Octopus Energy API.
 - [octo-influx](./octo-influx), a tool to import smart metering data from the Octopus Energy API
   into InfluxDB.
+- [enphase-local](./enphase-local), a client library for a subset of the Enphase IQ Gateway (Envoy)
+  local API.
 
 This is not an officially supported Google product.
 
