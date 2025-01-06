@@ -73,7 +73,7 @@ pub struct Register {
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Agreement {
-    tariff_code: String,
-    valid_from: DateTime<FixedOffset>,
-    valid_to: Option<DateTime<FixedOffset>>,
+    pub tariff_code: String,
+    pub valid_from: DateTime<FixedOffset>,
+    pub valid_to: Option<DateTime<FixedOffset>>,
 }
