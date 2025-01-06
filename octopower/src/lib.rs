@@ -22,7 +22,7 @@ pub mod results;
 
 use graphql_client::{GraphQLQuery, Response};
 use reqwest::{Client, StatusCode, Url};
-use results::{account::Account, consumption::Readings};
+use results::{account::Account, consumption::Readings, standing_unit_rate::StandingUnitRates};
 use std::fmt::{self, Display, Formatter};
 use thiserror::Error;
 use url::ParseError;
@@ -116,6 +116,13 @@ impl MeterType {
             Self::Gas => "gas-meter-points",
         }
     }
+
+    fn tariffs_path(self) -> &'static str {
+        match self {
+            Self::Electricity => "electricity-tariffs",
+            Self::Gas => "gas-tariffs",
+        }
+    }
 }
 
 impl Display for MeterType {
@@ -188,6 +195,41 @@ pub async fn get_consumption(
         url.query_pairs_mut()
             .append_pair("group_by", grouping.as_str());
     }
+
+    let response = client
+        .get(url)
+        .header("Authorization", &auth_token.0)
+        .send()
+        .await?;
+
+    let status = response.status();
+    if status.is_success() {
+        Ok(response.json().await?)
+    } else {
+        let body = response.text().await?;
+        Err(ApiError::RestError { status, body })
+    }
+}
+
+/// Fetch Agile Octopus Electricity-tariffs
+pub async fn get_standard_unit_rates(
+    auth_token: &AuthToken,
+    meter_type: MeterType,
+    product_code: &str,
+    tariff_code: &str,
+    page: u32,
+    page_size: usize,
+) -> Result<StandingUnitRates, ApiError> {
+    let client = Client::new();
+    let url = Url::parse(&format!(
+        "https://api.octopus.energy/v1/products/{}/{}/{}/standard-unit-rates/?page={}&page_size={}",
+        product_code,
+        meter_type.tariffs_path(),
+        tariff_code,
+        page + 1,
+        page_size,
+    ))?;
+    dbg!(&url);
     let response = client
         .get(url)
         .header("Authorization", &auth_token.0)
