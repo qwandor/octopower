@@ -3,7 +3,7 @@ name: Package
 on:
   push:
     branches: [main]
-    tags: ["octo-influx-*"]
+    tags: ["enphase-influx-*", "octo-influx-*"]
 
 env:
   CARGO_TERM_COLOR: always
