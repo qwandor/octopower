@@ -46,16 +46,23 @@ fn production_to_points(production: &Production) -> Vec<Point> {
 fn device_production_to_point(device: &Device) -> Option<Point> {
     match device.type_ {
         DeviceType::Eim => {
-            let measurement_type = match device.measurement_type.unwrap() {
+            let Some(measurement_type) = device.measurement_type else {
+                warn!("EIM device missing measurement type: {:?}", device);
+                return None;
+            };
+            let Some(details) = device.details.as_ref() else {
+                warn!("EIM device missing details: {:?}", device);
+                return None;
+            };
+            let debug_measurement_type = match measurement_type {
                 MeasurementType::Production => "Producing",
                 MeasurementType::TotalConsumption => "Consuming",
                 MeasurementType::NetConsumption => "Net      ",
             };
-            let details = device.details.as_ref().unwrap();
             debug!(
                 "{}: {:9} {:7.3} W, {} Wh so far today, {} Wh total",
                 device.reading_time,
-                measurement_type,
+                debug_measurement_type,
                 device.w_now,
                 details.wh_today,
                 details.wh_lifetime,
@@ -65,7 +72,7 @@ fn device_production_to_point(device: &Device) -> Option<Point> {
                     .add_timestamp(device.reading_time.timestamp())
                     .add_tag(
                         "measurement_type",
-                        tag_for_measurement_type(device.measurement_type.unwrap()),
+                        tag_for_measurement_type(measurement_type),
                     )
                     .add_field("w_now", device.w_now)
                     .add_field("wh_lifetime", details.wh_lifetime),
