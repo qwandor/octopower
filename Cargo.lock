@@ -193,6 +193,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "enphase-influx"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "enphase-local",
+ "eyre",
+ "influx_db_client",
+ "log",
+ "pretty_env_logger",
+ "serde",
+ "tokio",
+ "toml",
+ "url",
+]
+
+[[package]]
 name = "enphase-local"
 version = "0.1.0"
 dependencies = [

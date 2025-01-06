@@ -13,6 +13,6 @@ pub fn serialize<S: Serializer>(dt: &DateTime<Utc>, serializer: S) -> Result<S::
 
 pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<DateTime<Utc>, D::Error> {
     let s = String::deserialize(deserializer)?;
-    let seconds = s.parse().map_err(|e| de::Error::custom(e))?;
+    let seconds = s.parse().map_err(de::Error::custom)?;
     DateTime::from_timestamp(seconds, 0).ok_or_else(|| de::Error::custom(""))
 }

@@ -19,7 +19,7 @@ pub struct Reading {
     channels: Vec<Channel>,
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Channel {
     /// Gateway record ID number.
@@ -66,7 +66,7 @@ pub struct Report {
     lines: Vec<MeterReading>,
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MeterReading {
     /// Current power in Watts.
