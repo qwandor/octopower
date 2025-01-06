@@ -21,12 +21,14 @@
 
 pub mod home;
 pub mod inventory;
+pub mod inverters;
 pub mod meters;
 pub mod production;
 mod timestamp_string;
 
 use home::Home;
 use inventory::Inventory;
+use inverters::Inverter;
 use meters::{Reading, Report};
 use production::Production;
 use reqwest::{Client, Error, Url};
@@ -108,6 +110,18 @@ impl Envoy {
     pub async fn meter_reports(&self) -> Result<Vec<Report>, Error> {
         self.client
             .get(self.base_url.join("ivp/meters/reports").unwrap())
+            .bearer_auth(&self.auth_token)
+            .send()
+            .await?
+            .error_for_status()?
+            .json()
+            .await
+    }
+
+    /// Gets individual inverter production data from the v1 API.
+    pub async fn inverters(&self) -> Result<Vec<Inverter>, Error> {
+        self.client
+            .get(self.base_url.join("api/v1/production/inverters").unwrap())
             .bearer_auth(&self.auth_token)
             .send()
             .await?
