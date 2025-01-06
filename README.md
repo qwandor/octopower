@@ -9,6 +9,8 @@ The repository includes a number of related crates using the
   into InfluxDB.
 - [enphase-local](./enphase-local), a client library for a subset of the Enphase IQ Gateway (Envoy)
   local API.
+- [enphase-influx](./enphase-influx), a tool to import solar production data from the Enphase IQ
+  Gateway into InfluxDB.
 
 This is not an officially supported Google product.
 
