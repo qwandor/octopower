@@ -2,7 +2,6 @@
 // This project is dual-licensed under Apache 2.0 and MIT terms.
 // See LICENSE-APACHE and LICENSE-MIT for details.
 
-use chrono::{TimeDelta, Utc};
 use enphase_local::{
     production::{Device, DeviceType, MeasurementType},
     Envoy,
@@ -32,6 +31,7 @@ async fn main() -> Result<(), Report> {
     println!("IVP meter reports: {:#?}", envoy.meter_reports().await?);
     println!("Inverters: {:#?}", envoy.inverters().await?);
 
+    let mut last_inverters = Vec::new();
     loop {
         let production = envoy.production().await?;
         for device in &production.production {
@@ -41,9 +41,9 @@ async fn main() -> Result<(), Report> {
             print_stats(device);
         }
 
-        let now = Utc::now();
-        for inverter in &envoy.inverters().await? {
-            if now - inverter.last_report_date < TimeDelta::minutes(5) {
+        let inverters = envoy.inverters().await?;
+        if inverters != last_inverters {
+            for inverter in &inverters {
                 println!(
                     "{} Inverter {} producing {} W (max {} W)",
                     inverter.last_report_date,
@@ -52,7 +52,13 @@ async fn main() -> Result<(), Report> {
                     inverter.max_report_watts,
                 );
             }
+            let inverter_production_sum = inverters
+                .iter()
+                .map(|inverter| inverter.last_report_watts)
+                .sum::<u32>();
+            println!("Total: {} W", inverter_production_sum);
         }
+        last_inverters = inverters;
 
         sleep(Duration::from_secs(2));
     }
