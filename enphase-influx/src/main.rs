@@ -6,6 +6,7 @@ mod config;
 
 use config::{get_influxdb_client, Config};
 use enphase_local::{
+    inverters::Inverter,
     production::{Device, DeviceType, MeasurementType, Production},
     Envoy,
 };
@@ -24,12 +25,23 @@ async fn main() -> Result<(), Report> {
     let influxdb_client = get_influxdb_client(&config.influxdb)?;
     let envoy = Envoy::new(config.enphase.base_url, &config.enphase.token);
 
+    let mut last_inverters = Vec::new();
     loop {
         let production = envoy.production().await?;
         let points = production_to_points(&production);
         influxdb_client
             .write_points(points, INFLUXDB_PRECISION, None)
             .await?;
+
+        let inverters = envoy.inverters().await?;
+        let points = inverters_to_points(&inverters, &last_inverters);
+        if !points.is_empty() {
+            influxdb_client
+                .write_points(points, INFLUXDB_PRECISION, None)
+                .await?;
+        }
+        last_inverters = inverters;
+
         sleep(config.poll_period).await;
     }
 }
@@ -102,6 +114,35 @@ fn tag_for_measurement_type(measurement_type: MeasurementType) -> &'static str {
         MeasurementType::TotalConsumption => "consuming",
         MeasurementType::NetConsumption => "net",
     }
+}
+
+fn inverters_to_points(inverters: &[Inverter], last_inverters: &[Inverter]) -> Vec<Point> {
+    inverters
+        .iter()
+        .filter(|inverter| {
+            // Don't emit a point if the inverter reading hasn't changed since last time.
+            Some(*inverter)
+                != last_inverters
+                    .iter()
+                    .find(|last_inverter| last_inverter.serial_number == inverter.serial_number)
+        })
+        .map(inverter_to_point)
+        .collect()
+}
+
+fn inverter_to_point(inverter: &Inverter) -> Point {
+    debug!(
+        "{} Inverter {} producing {} W (max {} W)",
+        inverter.last_report_date,
+        inverter.serial_number,
+        inverter.last_report_watts,
+        inverter.max_report_watts,
+    );
+    Point::new("inverter")
+        .add_timestamp(inverter.last_report_date.timestamp())
+        .add_tag("serial_number", inverter.serial_number.as_str())
+        .add_field("last_watts", i64::from(inverter.last_report_watts))
+        .add_field("max_watts", i64::from(inverter.max_report_watts))
 }
 
 #[cfg(test)]
@@ -204,6 +245,65 @@ mod tests {
                     .add_field("w_now", -1.0)
                     .add_field("wh_lifetime", 0.001),
             ]
+        );
+    }
+
+    #[test]
+    fn test_inverters_to_points() {
+        let last_report_date = Utc.with_ymd_and_hms(2025, 1, 1, 10, 30, 0).unwrap();
+        let last_report_date_old = Utc.with_ymd_and_hms(2025, 1, 1, 2, 30, 0).unwrap();
+        assert_eq!(inverters_to_points(&[], &[]), vec![]);
+        let inverter1 = Inverter {
+            last_report_date,
+            dev_type: 1,
+            serial_number: "1".to_string(),
+            last_report_watts: 42,
+            max_report_watts: 66,
+        };
+        let inverter2_old = Inverter {
+            last_report_date: last_report_date_old,
+            dev_type: 1,
+            serial_number: "2".to_string(),
+            last_report_watts: 22,
+            max_report_watts: 600,
+        };
+        let inverter2 = Inverter {
+            last_report_date,
+            dev_type: 1,
+            serial_number: "2".to_string(),
+            last_report_watts: 33,
+            max_report_watts: 600,
+        };
+        assert_eq!(
+            inverters_to_points(&[inverter1.clone()], &[]),
+            vec![Point::new("inverter")
+                .add_timestamp(last_report_date.timestamp())
+                .add_tag("serial_number", "1")
+                .add_field("last_watts", 42)
+                .add_field("max_watts", 66)]
+        );
+        assert_eq!(
+            inverters_to_points(&[inverter1.clone(), inverter2.clone()], &[]),
+            vec![
+                Point::new("inverter")
+                    .add_timestamp(last_report_date.timestamp())
+                    .add_tag("serial_number", "1")
+                    .add_field("last_watts", 42)
+                    .add_field("max_watts", 66),
+                Point::new("inverter")
+                    .add_timestamp(last_report_date.timestamp())
+                    .add_tag("serial_number", "2")
+                    .add_field("last_watts", 33)
+                    .add_field("max_watts", 600),
+            ]
+        );
+        assert_eq!(
+            inverters_to_points(&[inverter1.clone(), inverter2], &[inverter1, inverter2_old]),
+            vec![Point::new("inverter")
+                .add_timestamp(last_report_date.timestamp())
+                .add_tag("serial_number", "2")
+                .add_field("last_watts", 33)
+                .add_field("max_watts", 600)]
         );
     }
 }
