@@ -23,7 +23,7 @@ toml = "0.8.20"
 url = { version = "2.5.4", features = ["serde"] }
 
 [dev-dependencies]
-chrono = "0.4.39"
+chrono = "0.4.40"
 
 [package.metadata.deb]
 # $auto doesn't work because we don't build packages in the same container as we build the binaries.
