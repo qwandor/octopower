@@ -116,7 +116,10 @@ fn tag_for_measurement_type(measurement_type: MeasurementType) -> &'static str {
     }
 }
 
-fn inverters_to_points(inverters: &[Inverter], last_inverters: &[Inverter]) -> Vec<Point> {
+fn inverters_to_points<'a>(
+    inverters: &'a [Inverter],
+    last_inverters: &[Inverter],
+) -> Vec<Point<'a>> {
     inverters
         .iter()
         .filter(|inverter| {

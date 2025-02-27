@@ -92,13 +92,13 @@ async fn import_readings(
     Ok(())
 }
 
-fn point_for_reading(
+fn point_for_reading<'a>(
     measurement: &str,
     meter_type: MeterType,
-    mpxn: &str,
-    serial: &str,
+    mpxn: &'a str,
+    serial: &'a str,
     reading: Consumption,
-) -> Point {
+) -> Point<'a> {
     Point::new(measurement)
         .add_timestamp(reading.interval_end.timestamp())
         .add_tag("type", meter_type.to_string())
