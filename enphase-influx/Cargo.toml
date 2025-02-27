@@ -11,7 +11,7 @@ categories = ["network-programming"]
 
 [dependencies]
 eyre = "0.6.12"
-influx_db_client = { version = "0.5.1", default-features = false, features = [
+influx_db_client = { version = "0.6.1", default-features = false, features = [
     "rustls-tls",
 ] }
 log = "0.4.26"
