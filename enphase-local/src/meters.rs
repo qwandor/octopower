@@ -4,7 +4,7 @@
 
 //! Types returned by the IVP meters API methods.
 
-use chrono::{serde::ts_seconds, DateTime, Utc};
+use chrono::{DateTime, Utc, serde::ts_seconds};
 use serde::{Deserialize, Serialize};
 
 use crate::production::MeasurementType;

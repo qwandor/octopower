@@ -1,7 +1,7 @@
 [package]
 name = "octopower"
 version = "0.2.0"
-edition = "2021"
+edition = "2024"
 description = "A client library for the Octopus Energy API."
 license = "MIT OR Apache-2.0"
 authors = ["Andrew Walbran <qwandor@gmail.com>"]

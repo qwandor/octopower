@@ -4,7 +4,7 @@
 
 //! Types returned by the home API.
 
-use chrono::{serde::ts_seconds, DateTime, NaiveTime, Utc};
+use chrono::{DateTime, NaiveTime, Utc, serde::ts_seconds};
 use serde::{Deserialize, Serialize};
 use std::net::IpAddr;
 

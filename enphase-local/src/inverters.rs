@@ -4,7 +4,7 @@
 
 //! Types returned by the v1 production API.
 
-use chrono::{serde::ts_seconds, DateTime, Utc};
+use chrono::{DateTime, Utc, serde::ts_seconds};
 use serde::{Deserialize, Serialize};
 
 /// Production data for a single microinverter.

@@ -3,7 +3,7 @@
 // See LICENSE-APACHE and LICENSE-MIT for details.
 
 use eyre::Report;
-use octopower::{authenticate, get_account, get_consumption, AuthToken, MeterType};
+use octopower::{AuthToken, MeterType, authenticate, get_account, get_consumption};
 use std::process::exit;
 
 #[tokio::main]

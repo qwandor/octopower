@@ -5,7 +5,7 @@
 //! Functions for serialising and deserialising a timestamp as a string with `serde`.
 
 use chrono::{DateTime, Utc};
-use serde::{de, Deserialize, Deserializer, Serializer};
+use serde::{Deserialize, Deserializer, Serializer, de};
 
 pub fn serialize<S: Serializer>(dt: &DateTime<Utc>, serializer: S) -> Result<S::Ok, S::Error> {
     serializer.serialize_str(&dt.timestamp().to_string())

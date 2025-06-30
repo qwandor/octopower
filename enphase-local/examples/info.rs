@@ -3,8 +3,8 @@
 // See LICENSE-APACHE and LICENSE-MIT for details.
 
 use enphase_local::{
-    production::{Device, DeviceType, MeasurementType},
     Envoy,
+    production::{Device, DeviceType, MeasurementType},
 };
 use eyre::Report;
 use reqwest::Url;
