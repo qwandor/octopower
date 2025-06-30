@@ -56,7 +56,7 @@ async fn main() -> Result<(), Report> {
                 .iter()
                 .map(|inverter| inverter.last_report_watts)
                 .sum::<u32>();
-            println!("Total: {} W", inverter_production_sum);
+            println!("Total: {inverter_production_sum} W");
         }
         last_inverters = inverters;
 
@@ -89,7 +89,7 @@ fn print_stats(device: &Device) {
             );
         }
         device_type => {
-            println!("Unsupported device type {:?}", device_type);
+            println!("Unsupported device type {device_type:?}");
         }
     }
 }

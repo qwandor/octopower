@@ -34,7 +34,7 @@ impl Config {
 
     fn read(filename: &str) -> Result<Config, Report> {
         let config_file =
-            read_to_string(filename).wrap_err_with(|| format!("Reading {}", filename))?;
+            read_to_string(filename).wrap_err_with(|| format!("Reading {filename}"))?;
         Ok(toml::from_str(&config_file)?)
     }
 }

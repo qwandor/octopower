@@ -86,7 +86,7 @@ struct AuthenticateQuery;
 /// Fetch information about the given account from the Octopus REST API.
 pub async fn get_account(auth_token: &AuthToken, account_id: &str) -> Result<Account, ApiError> {
     let client = Client::new();
-    let url = format!("https://api.octopus.energy/v1/accounts/{}/", account_id);
+    let url = format!("https://api.octopus.energy/v1/accounts/{account_id}/");
     let response = client
         .get(url)
         .header("Authorization", &auth_token.0)

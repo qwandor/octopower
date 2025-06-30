@@ -59,11 +59,11 @@ fn device_production_to_point(device: &Device) -> Option<Point> {
     match device.type_ {
         DeviceType::Eim => {
             let Some(measurement_type) = device.measurement_type else {
-                warn!("EIM device missing measurement type: {:?}", device);
+                warn!("EIM device missing measurement type: {device:?}");
                 return None;
             };
             let Some(details) = device.details.as_ref() else {
-                warn!("EIM device missing details: {:?}", device);
+                warn!("EIM device missing details: {device:?}");
                 return None;
             };
             let debug_measurement_type = match measurement_type {
@@ -102,7 +102,7 @@ fn device_production_to_point(device: &Device) -> Option<Point> {
             )
         }
         device_type => {
-            warn!("Ignoring Unsupported device type {:?}", device_type);
+            warn!("Ignoring Unsupported device type {device_type:?}");
             None
         }
     }
