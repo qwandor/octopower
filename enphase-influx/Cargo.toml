@@ -1,6 +1,6 @@
 [package]
 name = "enphase-influx"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 description = "A tool to import solar and battery data from the Enphase IQ Gateway local API into InfluxDB."
 license = "MIT OR Apache-2.0"

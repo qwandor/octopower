@@ -1,6 +1,6 @@
 [package]
 name = "octo-influx"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 description = "A tool to import smart metering data from the Octopus Energy API into InfluxDB."
 license = "MIT OR Apache-2.0"
@@ -15,7 +15,7 @@ influx_db_client = { version = "0.6.1", default-features = false, features = [
 	"rustls-tls",
 ] }
 log = "0.4.27"
-octopower = { version = "0.2.0", path = "../octopower" }
+octopower = { version = "0.2.1", path = "../octopower" }
 pretty_env_logger = "0.5.0"
 serde = "1.0.219"
 tokio = { version = "1.45.1", features = ["macros", "rt", "rt-multi-thread"] }

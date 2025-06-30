@@ -151,7 +151,7 @@ dependencies = [
 
 [[package]]
 name = "enphase-influx"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "chrono",
  "enphase-local",
@@ -807,7 +807,7 @@ dependencies = [
 
 [[package]]
 name = "octo-influx"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "eyre",
  "influx_db_client",
@@ -822,7 +822,7 @@ dependencies = [
 
 [[package]]
 name = "octopower"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "chrono",
  "eyre",
