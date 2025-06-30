@@ -4,11 +4,11 @@
 
 mod config;
 
-use config::{get_influxdb_client, Config};
+use config::{Config, get_influxdb_client};
 use enphase_local::{
+    Envoy,
     inverters::Inverter,
     production::{Device, DeviceType, MeasurementType, Production},
-    Envoy,
 };
 use eyre::Report;
 use influx_db_client::{Point, Precision};
@@ -279,11 +279,13 @@ mod tests {
         };
         assert_eq!(
             inverters_to_points(&[inverter1.clone()], &[]),
-            vec![Point::new("inverter")
-                .add_timestamp(last_report_date.timestamp())
-                .add_tag("serial_number", "1")
-                .add_field("last_watts", 42)
-                .add_field("max_watts", 66)]
+            vec![
+                Point::new("inverter")
+                    .add_timestamp(last_report_date.timestamp())
+                    .add_tag("serial_number", "1")
+                    .add_field("last_watts", 42)
+                    .add_field("max_watts", 66)
+            ]
         );
         assert_eq!(
             inverters_to_points(&[inverter1.clone(), inverter2.clone()], &[]),
@@ -302,11 +304,13 @@ mod tests {
         );
         assert_eq!(
             inverters_to_points(&[inverter1.clone(), inverter2], &[inverter1, inverter2_old]),
-            vec![Point::new("inverter")
-                .add_timestamp(last_report_date.timestamp())
-                .add_tag("serial_number", "2")
-                .add_field("last_watts", 33)
-                .add_field("max_watts", 600)]
+            vec![
+                Point::new("inverter")
+                    .add_timestamp(last_report_date.timestamp())
+                    .add_tag("serial_number", "2")
+                    .add_field("last_watts", 33)
+                    .add_field("max_watts", 600)
+            ]
         );
     }
 }

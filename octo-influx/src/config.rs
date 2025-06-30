@@ -3,7 +3,7 @@
 // See LICENSE-APACHE and LICENSE-MIT for details.
 
 use eyre::{Report, WrapErr};
-use influx_db_client::{reqwest::Url, Client};
+use influx_db_client::{Client, reqwest::Url};
 use serde::Deserialize;
 use std::fs::read_to_string;
 

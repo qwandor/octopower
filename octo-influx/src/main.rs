@@ -4,13 +4,13 @@
 
 mod config;
 
-use config::{get_influxdb_client, Config};
+use config::{Config, get_influxdb_client};
 use eyre::Report;
 use influx_db_client::{Client, Point, Precision};
 use log::info;
 use octopower::{
-    authenticate, get_account, get_consumption, results::consumption::Consumption, AuthToken,
-    MeterType,
+    AuthToken, MeterType, authenticate, get_account, get_consumption,
+    results::consumption::Consumption,
 };
 
 const INFLUXDB_PRECISION: Option<Precision> = Some(Precision::Seconds);
