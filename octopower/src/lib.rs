@@ -20,7 +20,7 @@
 
 pub mod results;
 
-use graphql_client::{GraphQLQuery, Response};
+use graphql_client::{GraphQLQuery, reqwest::post_graphql};
 use reqwest::{Client, StatusCode, Url};
 use results::{account::Account, consumption::Readings};
 use std::fmt::{self, Display, Formatter};
@@ -58,14 +58,12 @@ pub async fn authenticate(email: &str, password: &str) -> Result<AuthToken, ApiE
         email: email.to_owned(),
         password: password.to_owned(),
     };
-    let query = AuthenticateQuery::build_query(variables);
-    let response: Response<authenticate_query::ResponseData> = client
-        .post("https://api.octopus.energy/v1/graphql/")
-        .json(&query)
-        .send()
-        .await?
-        .json()
-        .await?;
+    let response = post_graphql::<AuthenticateQuery, &str>(
+        &client,
+        "https://api.octopus.energy/v1/graphql/",
+        variables,
+    )
+    .await?;
     if let Some(authenticate_query::ResponseData {
         obtain_kraken_token: Some(token),
     }) = response.data
