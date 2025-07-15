@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Bugfixes
+
+- Made fields of `Reading`, `Channel`, `Report` and `MeterReading` public.
+
 ## 0.1.1
 
 ### New features
