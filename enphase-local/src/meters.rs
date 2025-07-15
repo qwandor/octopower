@@ -14,45 +14,45 @@ use crate::production::MeasurementType;
 pub struct Reading {
     /// A summary of all channels.
     #[serde(flatten)]
-    summary: Channel,
+    pub summary: Channel,
     /// The individual channels (typically different phases) that make up this reading.
-    channels: Vec<Channel>,
+    pub channels: Vec<Channel>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Channel {
     /// Gateway record ID number.
-    eid: u64,
+    pub eid: u64,
     /// Time when the message was generated.
     #[serde(with = "ts_seconds")]
-    timestamp: DateTime<Utc>,
+    pub timestamp: DateTime<Utc>,
     /// Active energy delivered.
-    act_energy_dlvd: f64,
+    pub act_energy_dlvd: f64,
     /// Active energy received.
-    act_energy_rcvd: f64,
+    pub act_energy_rcvd: f64,
     /// Apparent energy.
-    apparent_energy: f64,
+    pub apparent_energy: f64,
     /// Lagging reactive energy.
-    react_energy_lagg: f64,
+    pub react_energy_lagg: f64,
     /// Leading reactive energy.
-    react_energy_lead: f64,
+    pub react_energy_lead: f64,
     /// Instantaneous demand.
-    instantaneous_demand: f64,
+    pub instantaneous_demand: f64,
     /// Active power.
-    active_power: f64,
+    pub active_power: f64,
     /// Apparent power.
-    apparent_power: f64,
+    pub apparent_power: f64,
     /// Reactive power.
-    reactive_power: f64,
+    pub reactive_power: f64,
     /// Power factor.
-    pwr_factor: f64,
+    pub pwr_factor: f64,
     /// Voltage.
-    voltage: f64,
+    pub voltage: f64,
     /// Current.
-    current: f64,
+    pub current: f64,
     /// Frequency.
-    freq: f64,
+    pub freq: f64,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -60,39 +60,39 @@ pub struct Channel {
 pub struct Report {
     /// Time when the message was generated.
     #[serde(with = "ts_seconds")]
-    created_at: DateTime<Utc>,
-    report_type: MeasurementType,
-    cumulative: MeterReading,
-    lines: Vec<MeterReading>,
+    pub created_at: DateTime<Utc>,
+    pub report_type: MeasurementType,
+    pub cumulative: MeterReading,
+    pub lines: Vec<MeterReading>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MeterReading {
     /// Current power in Watts.
-    curr_w: f64,
+    pub curr_w: f64,
     /// Active power.
-    act_power: f64,
+    pub act_power: f64,
     /// Apparent power.
-    apprnt_pwr: f64,
+    pub apprnt_pwr: f64,
     /// Reactive power.
-    react_pwr: f64,
+    pub react_pwr: f64,
     /// Cumulative Watt-hours delivered.
-    wh_dlvd_cum: f64,
+    pub wh_dlvd_cum: f64,
     /// Cumulative Watt-hours received.
-    wh_rcvd_cum: f64,
+    pub wh_rcvd_cum: f64,
     /// Cumulative lagging varh.
-    varh_lag_cum: f64,
+    pub varh_lag_cum: f64,
     /// Cumulative leading varh.
-    varh_lead_cum: f64,
+    pub varh_lead_cum: f64,
     /// Cumulative vah.
-    vah_cum: f64,
+    pub vah_cum: f64,
     /// RMS voltage.
-    rms_voltage: f64,
+    pub rms_voltage: f64,
     /// RMS current.
-    rms_current: f64,
+    pub rms_current: f64,
     /// Power factor.
-    pwr_factor: f64,
+    pub pwr_factor: f64,
     /// Frequency in Hertz.
-    freq_hz: f64,
+    pub freq_hz: f64,
 }
