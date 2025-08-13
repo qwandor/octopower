@@ -11,7 +11,7 @@ categories = ["api-bindings"]
 
 [dependencies]
 chrono = { version = "0.4.41", features = ["serde"] }
-reqwest = { version = "0.12.22", features = [
+reqwest = { version = "0.12.23", features = [
     "json",
     "rustls-tls-webpki-roots",
 ], default-features = false }
