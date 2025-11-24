@@ -10,6 +10,6 @@ jobs:
     name: Format
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Format Rust code
         run: cargo fmt --all -- --check
