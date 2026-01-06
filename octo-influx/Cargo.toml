@@ -20,7 +20,7 @@ pretty_env_logger = "0.5.0"
 serde = "1.0.228"
 tokio = { version = "1.49.0", features = ["macros", "rt", "rt-multi-thread"] }
 toml = "0.9.10"
-url = { version = "2.5.7", features = ["serde"] }
+url = { version = "2.5.8", features = ["serde"] }
 
 [package.metadata.deb]
 # $auto doesn't work because we don't build packages in the same container as we build the binaries.
