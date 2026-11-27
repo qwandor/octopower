@@ -16,7 +16,7 @@ influx_db_client = { version = "0.6.1", default-features = false, features = [
 ] }
 log = "0.4.32"
 enphase-local = { version = "0.1.1", path = "../enphase-local" }
-pretty_env_logger = "0.5.0"
+pretty_env_logger = "0.6.0"
 serde = "1.0.228"
 tokio = { version = "1.52.3", features = ["macros", "rt", "rt-multi-thread"] }
 toml = "1.1.2"
